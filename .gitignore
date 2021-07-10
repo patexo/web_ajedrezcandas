@@ -1,2 +1,2 @@
-# evitamos añadir directorios de dependencias e instalaciones
+# Ignora la carpeta node_modules
 node_modules
