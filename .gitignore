@@ -1,0 +1,2 @@
+# evitamos añadir directorios de dependencias e instalaciones
+node_modules
