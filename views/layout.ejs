@@ -3,29 +3,38 @@
   <head>
     <meta charset="utf-8">
     <title>Club Ajedrez Candas</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel='stylesheet'
+          type='text/css'
+          media='only screen and (min-width: 800px) and (min-device-width: 600px)'
+          href='/stylesheets/wide.css'/>
+    <link rel='stylesheet'
+          type='text/css'
+          media='only screen and (max-width: 480px)'
+          href='/stylesheets/smartphone.css'/>
   </head>
   <body>
-    <header>
-        <h1>Bienvenido a la web del Club Ajedrez Candas</h1>
-    </header>  
+    <div id="page">
     
-    <nav>
-        <a href="/">Club Ajedrez Candas</a>
-        <a href="/contacto">Contacto</a>
-    </nav>
+        <header class="main" id="mainHeader">
+            <h1>Bienvenido a la web del Club Ajedrez Candas</h1>
+        </header>  
     
-    <section>
-        <div>
+        <nav class="main" id="mainNav" role="navigation">
+            <a href="/">Club Ajedrez Candas</a>
+            <a href="/contacto">Contacto</a>
+        </nav>
+    
+        <section class="main" id="mainSection">
             <%- body %>
-        </div>
-    </section>
+        </section>
 
-    <footer>
-        <div class="row footer_inf">
-            <h6>(C) Club Deportivo Básico Ajedrez Candás, 2021</h6>
-        </div><!-- .row -->
-    </footer>
-    
+        <footer class="main" id="mainFooter">
+            <div class="row footer_inf">
+                <h6>(C) Club Deportivo Básico Ajedrez Candás, 2021</h6>
+            </div><!-- .row -->
+        </footer>
+    </div><!-- id=page -->
   </body>
 </html>
