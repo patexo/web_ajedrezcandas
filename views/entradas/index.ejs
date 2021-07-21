@@ -1,0 +1,34 @@
+
+<div class="right">
+    <form method="get" action="/entradas">
+        <input type="text" name="search" value="<%= locals.search || '' %>" placeholder="entrada a buscar" autocomplete="off" />
+        <input type="submit" value="Buscar">
+    </form>
+</div>
+<h1>
+    Entradas:
+</h1>
+
+<table>
+    <% for (var i in entradas) { %>
+        <% var entrada = entradas[i]; %>
+        <tr>
+            <td>
+                <a href="/entradas/<%= entrada.id %>"><%= entrada.titular %></a>
+            </td>
+            <td>
+                <a href="/entradas/<%= entrada.id %>" class="button">Mostrar</a>
+            </td>
+            <td>
+                <a href="/entradas/<%= entrada.id %>/edit" class="button">Editar</a>
+            </td>
+            <td>
+                <a href="/entradas/<%= entrada.id %>?_method=DELETE"
+                   onClick="return confirm('Delete: <%= entrada.titular %>');"
+                   class="button">Eliminar</a>
+            </td>
+        </tr>
+    <% } %>
+</table>
+
+<a href="/entradas/new" class="button">Crear una nueva entrada</a>

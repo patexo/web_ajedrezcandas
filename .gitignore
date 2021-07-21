@@ -1,2 +1,11 @@
 # Ignora la carpeta node_modules
 node_modules
+
+.DS_Store
+.idea
+
+# Ignora la base de datos con la informacion de la web
+ajedrezcandas.sqlite
+
+# Ignora los archivos relacionados a API keys
+.env
