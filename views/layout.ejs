@@ -39,7 +39,9 @@
             <!-- <a href="/noticias">Noticias</a> -->
             <a href="/entradas">Entradas</a>
             <a href="/contacto">Contacto</a>
-            <a href="/users">Usuarios</a>
+            <% if (locals.loginUser) { %>
+                <a href="/users">Users</a>
+            <% } %>
         </nav>
     
         <section class="main" id="mainSection">
