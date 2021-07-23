@@ -1,0 +1,37 @@
+<section class="right">
+    Login with:
+
+    <%- loginWithGoogle   ? '<a href="/auth/google"><img src="/images/login/google.png" class="loginicon" alt="Google"></a>' : "" %>
+    <%- loginWithTwitter  ? '<a href="/auth/twitter"><img src="/images/login/twitter.png" class="loginicon" alt="Twitter"></a>' : "" %>
+    <%- loginWithFacebook   ? '<a href="/auth/facebook"><img src="/images/login/facebook.png" class="loginicon" alt="Facebook"></a>' : "" %>
+    <%- loginWithOutlook ? '<a href="/auth/outlook"><img src="/images/login/outlook.png" class="loginicon" alt="Outlook"></a>' : "" %>
+</section>
+
+<section>
+
+    <h1>Login</h1>
+
+    <form method='POST' action='/login'>
+
+        <div>
+            <label for="login">Login:</label>
+            <br/>
+            <input type="text" id="username" name="username" size="30" autocomplete="off"/>
+        </div>
+
+        <div>
+            <label for="password">Password:</label>
+            <br/>
+            <input type="password" id="password" name="password" size="30" autocomplete="off"/>
+        </div>
+
+        <div>
+            <input name="commit" type="submit" value="Login"/>
+        </div>
+
+    </form>
+
+    <hr />
+
+    <a href="/users/new">Registrar una cuenta local</a>
+</section> 

@@ -1,9 +1,66 @@
 var express = require('express');
 var router = express.Router();
 
-// const noticiaController = require('../controllers/noticia');
+
 const entradaController = require('../controllers/entrada');
 const userController = require('../controllers/user');
+const sessionController = require('../controllers/session');
+
+//-----------------------------------------------------------
+
+// Routes for the resource /login
+
+// autologout
+router.all('*',sessionController.checkLoginExpires);
+
+// login form
+router.get('/login', sessionController.new);
+
+// create login session
+router.post('/login',
+    sessionController.create,
+    sessionController.createLoginExpires);
+
+
+// Authenticate with OAuth 2.0 at Twitter
+if (process.env.TWITTER_CONSUMER_KEY && process.env.TWITTER_CONSUMER_SECRET) {
+  router.get('/auth/twitter',
+      sessionController.authTwitter);
+  router.get('/auth/twitter/callback',
+      sessionController.authTwitterCB,
+      sessionController.createLoginExpires);
+}
+
+// Authenticate with OAuth 2.0 at Twitter
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  router.get('/auth/google',
+      sessionController.authGoogle);
+  router.get('/auth/google/callback',
+      sessionController.authGoogleCB,
+      sessionController.createLoginExpires);
+}
+
+// Authenticate with OAuth 1.0 at Facebook
+if (process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET) {
+  router.get('/auth/facebook',
+      sessionController.authFacebook);
+  router.get('/auth/facebook/callback',
+      sessionController.authFacebookCB,
+      sessionController.createLoginExpires);
+}
+
+// Authenticate with OAuth 1.0 at Outlook
+if (process.env.OUTLOOK_CLIENT_ID && process.env.OUTLOOK_CLIENT_SECRET) {
+  router.get('/auth/outlook',
+      sessionController.authOutlook);
+  router.get('/auth/outlook/callback',
+      sessionController.authOutlookCB,
+      sessionController.createLoginExpires);
+}
+
+
+// logout - close login session
+router.delete('/login', sessionController.destroy);
 
 //-----------------------------------------------------------
 
@@ -25,7 +82,7 @@ function saveBack(req, res, next) {
 }
 
 // Restoration routes are GET routes that do not end in:
-//   /new, /edit, /play, /check, or /:id.
+//   /new, /edit, /play, /check, /login or /:id.
 router.get(
     [
       '/',
@@ -61,8 +118,8 @@ router.get('/users',                    userController.index);
 router.get('/users/:userId(\\d+)',      userController.show);
 router.get('/users/new',                userController.new);
 router.post('/users',                   userController.create);
-router.get('/users/:userId(\\d+)/edit', userController.edit);
-router.put('/users/:userId(\\d+)',      userController.update);
+router.get('/users/:userId(\\d+)/edit', userController.isLocalRequired, userController.edit);
+router.put('/users/:userId(\\d+)',      userController.isLocalRequired, userController.update);
 router.delete('/users/:userId(\\d+)',   userController.destroy);
 
 // Routes for the resource /entradas

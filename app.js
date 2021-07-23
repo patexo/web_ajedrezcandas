@@ -9,6 +9,10 @@ var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var partials = require('express-partials');
 var flash = require('express-flash');
 var methodOverride = require('method-override');
+require('dotenv').config();
+// Passport is Express-compatible authentication middleware for Node.js.
+// Passport strategy for authenticating with a username and password
+const passport = require('passport');
 
 var indexRouter = require('./routes/index');
 
@@ -44,6 +48,26 @@ app.use(methodOverride('_method', {methods: ["POST", "GET"]}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(partials());
 app.use(flash());
+
+app.use(passport.initialize( {
+  userProperty: 'loginUser' // defaults to 'user' if omitted
+}));
+app.use(passport.session());
+
+
+// Dynamic Helper:
+app.use(function(req, res, next) {
+
+  // To use req.loginUser in the views
+  res.locals.loginUser = req.loginUser && {
+      id: req.loginUser.id,
+      displayName: req.loginUser.displayName,
+      isAdmin: req.loginUser.isAdmin
+  };
+
+  next();
+});
+
 
 app.use('/', indexRouter);
 

@@ -21,6 +21,16 @@
     <div id="page">
     
         <header class="main" id="mainHeader">
+
+            <div class="right">
+                <% if (!locals.loginUser) { %>
+                    <a href="/login">Login</a>
+                <% } else { %>
+                    <a href="/users/<%= loginUser.id %>"><%= loginUser.displayName %></a>
+                    <a href="/login?_method=DELETE">Logout</a>
+                <% } %>
+            </div>
+            
             <h1>Bienvenido a la web del Club Ajedrez Candas</h1>
         </header>  
     

@@ -20,6 +20,16 @@ exports.load = async (req, res, next, userId) => {
     }
 };
 
+// MW that allows actions only if the user account is local.
+exports.isLocalRequired = (req, res, next) => {
+
+    if (!req.load.user.accountTypeId) {
+        next();
+    } else {
+        console.log('Prohibited operation: The user account must be local.');
+        res.send(403);
+    }
+};
 
 // GET /users
 exports.index = async (req, res, next) => {
@@ -92,7 +102,11 @@ exports.create = async (req, res, next) => {
         // Save into the data base
         user = await user.save({fields: ["username", "password", "salt"]});
         req.flash('success', 'User created successfully.');
-        res.redirect('/users/' + user.id);
+        if (req.loginUser) {
+            res.redirect('/users/' + user.id);
+        } else {
+            res.redirect('/login'); // Redirection to the login page
+        }
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
             req.flash('error', `User "${username}" already exists.`);
@@ -155,7 +169,14 @@ exports.update = async (req, res, next) => {
 exports.destroy = async (req, res, next) => {
 
     try {
-        await req.load.user.destroy()
+        // Deleting logged user.
+        if (req.loginUser && req.loginUser.id === req.load.user.id) {
+            // Close the user session
+            req.logout()
+            delete req.session.loginExpires;
+        }
+        await req.load.user.destroy();
+        
         req.flash('success', 'User deleted successfully.');
         res.redirect('/goback');
     } catch (error) {

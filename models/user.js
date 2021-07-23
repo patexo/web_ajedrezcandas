@@ -17,6 +17,11 @@ module.exports = function (sequelize, DataTypes) {
     ];
 
     class User extends Model {
+        // Añadir al modelo User el método verifyPassword(pwd) para
+        // autenticar con las credenciales guardadas en la tabla Users.
+        verifyPassword(password) {
+            return crypt.encryptPassword(password, this.salt) === this.password;
+        }
 
         // Returns the ID of the given account type.
         // AccountTypeId of local accounts is 0.
