@@ -114,21 +114,55 @@ router.param('userId', userController.load);
 
 
 // Routes for the resource /users
-router.get('/users',                    userController.index);
-router.get('/users/:userId(\\d+)',      userController.show);
-router.get('/users/new',                userController.new);
-router.post('/users',                   userController.create);
-router.get('/users/:userId(\\d+)/edit', userController.isLocalRequired, userController.edit);
-router.put('/users/:userId(\\d+)',      userController.isLocalRequired, userController.update);
-router.delete('/users/:userId(\\d+)',   userController.destroy);
+router.get('/users',                    
+  sessionController.loginRequired,
+  userController.index);
+router.get('/users/:userId(\\d+)',
+  sessionController.loginRequired,
+  userController.show);
+router.get('/users/new',
+  userController.new);
+router.post('/users',
+  userController.create);
+router.get('/users/:userId(\\d+)/edit',
+  sessionController.loginRequired,
+  userController.isLocalRequired, 
+  sessionController.adminOrMyselfRequired,
+  userController.edit);
+router.put('/users/:userId(\\d+)',
+  sessionController.loginRequired,
+  userController.isLocalRequired,
+  sessionController.adminOrMyselfRequired,
+  userController.update);
+router.delete('/users/:userId(\\d+)',
+  sessionController.loginRequired,
+  sessionController.adminOrMyselfRequired,
+  userController.destroy);
 
 // Routes for the resource /entradas
-router.get('/entradas',                        entradaController.index);
-router.get('/entradas/:entradaId(\\d+)',           entradaController.show);
-router.get('/entradas/new',                    entradaController.new);
-router.post('/entradas',                       entradaController.create);
-router.get('/entradas/:entradaId(\\d+)/edit',      entradaController.edit);
-router.put('/entradas/:entradaId(\\d+)',           entradaController.update);
-router.delete('/entradas/:entradaId(\\d+)',        entradaController.destroy);
+router.get('/entradas',
+  entradaController.index);
+router.get('/entradas/:entradaId(\\d+)',
+  entradaController.show);
+router.get('/entradas/new',
+  sessionController.loginRequired,
+  sessionController.adminRequired,
+  entradaController.new);
+router.post('/entradas',
+  sessionController.loginRequired,
+  sessionController.adminRequired,
+  entradaController.create);
+router.get('/entradas/:entradaId(\\d+)/edit',
+  sessionController.loginRequired,
+  sessionController.adminRequired,
+  entradaController.edit);
+router.put('/entradas/:entradaId(\\d+)',
+  sessionController.loginRequired,
+  sessionController.adminRequired,
+  entradaController.update);
+router.delete('/entradas/:entradaId(\\d+)',
+  sessionController.loginRequired,
+  sessionController.adminRequired,
+  entradaController.destroy);
 
 module.exports = router;
