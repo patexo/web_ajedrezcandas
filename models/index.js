@@ -15,13 +15,17 @@ const sequelize = new Sequelize(url);
 // sequelize.import(path.join(__dirname, 'noticia'));
 
 // Import the definition of the Entrada Table from entrada.js
-sequelize.import(path.join(__dirname, 'entrada'));
+const Entrada = sequelize.import(path.join(__dirname, 'entrada'));
 
 // Import the definition of the Users Table from user.js
-sequelize.import(path.join(__dirname,'user'));
+const User = sequelize.import(path.join(__dirname,'user'));
 
 // Session
 sequelize.import(path.join(__dirname,'session'));
+
+// Relation 1-to-N between User and Quiz:
+User.hasMany(Entrada, {as: 'entradas', foreignKey: 'authorId'});
+Entrada.belongsTo(User, {as: 'author', foreignKey: 'authorId'});
 
 
 module.exports = sequelize;

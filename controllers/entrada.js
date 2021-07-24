@@ -9,7 +9,11 @@ const paginate = require('../helpers/paginate').paginate;
 exports.load = async (req, res, next, entradaId) => {
 
     try {
-        const entrada = await models.Entrada.findByPk(entradaId);
+        const entrada = await models.Entrada.findByPk(entradaId, {
+            include: [
+                {model: models.User, as: 'author'}
+            ]
+        });
         if (entrada) {
             req.load = {...req.load, entrada};
             next();
@@ -18,6 +22,20 @@ exports.load = async (req, res, next, entradaId) => {
         }
     } catch (error) {
         next(error);
+    }
+};
+
+// MW that allows actions only if the user logged in is admin or is the author of the entrada.
+exports.adminOrAuthorRequired = (req, res, next) => {
+
+    const isAdmin  = !!req.loginUser.isAdmin;
+    const isAuthor = req.load.quiz.authorId === req.loginUser.id;
+
+    if (isAdmin || isAuthor) {
+        next();
+    } else {
+        console.log('Prohibited operation: The logged in user is not the author of the entrada, nor an administrator.');
+        res.send(403);
     }
 };
 
@@ -53,6 +71,7 @@ exports.index = async (req, res, next) => {
 
         findOptions.offset = items_per_page * (pageno - 1);
         findOptions.limit = items_per_page;
+        findOptions.include = [{model: models.User, as: 'author'}];
 
         const entradas = await models.Entrada.findAll(findOptions);
         res.render('entradas/index.ejs', {
@@ -88,14 +107,17 @@ exports.create = async (req, res, next) => {
 
     const {titular, articulo} = req.body;
 
+    const authorId = req.loginUser && req.loginUser.id || 0;
+
     let entrada = models.Entrada.build({
         titular,
-        articulo
+        articulo,
+        authorId
     });
 
     try {
         // Saves only the fields titular and articulo into the DDBB
-        entrada = await entrada.save({fields: ["titular", "articulo"]});
+        entrada = await entrada.save({fields: ["titular", "articulo", "authorId"]});
         req.flash('success', 'Entrada creada satisfactoriamente.');
         res.redirect('/entradas/' + entrada.id);
     } catch (error) {

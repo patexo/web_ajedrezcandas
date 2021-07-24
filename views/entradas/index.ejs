@@ -16,6 +16,9 @@
             <td>
                 <a href="/entradas/<%= entrada.id %>"><%= entrada.titular %></a>
             </td>
+            <td colspan="2">
+                <small> (by <%= entrada.author ? entrada.author.displayName : "Anonymous" %>) </small>
+            </td>
             <% if (locals.loginUser) { %>
                 <td>
                     <a href="/entradas/<%= entrada.id %>" class="button">Mostrar</a>
